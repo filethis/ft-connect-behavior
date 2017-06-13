@@ -180,7 +180,24 @@ An element that handles most of the business logic needed by FileThis Connect el
             {
                 type: Boolean,
                 value: true
+            },
+
+            // TODO: Factor these out. Used only by ft-connect-standard
+
+            _showConnectionPanel:
+            {
+                type: Boolean,
+                notify: true,
+                value: false
+            },
+
+            _showDocumentPanel:
+            {
+                type: Boolean,
+                notify: true,
+                value: false
             }
+
         },
 
 
@@ -208,6 +225,8 @@ An element that handles most of the business logic needed by FileThis Connect el
 
         ready: function()
         {
+            log.info("Ready");
+
             setInterval(this._changeNotificationPoller.bind(this), 1000);  // Poll for change notifications
         },
 
