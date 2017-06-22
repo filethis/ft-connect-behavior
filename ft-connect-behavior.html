@@ -336,10 +336,10 @@ An element that handles most of the business logic needed by FileThis Connect el
 
         _onCommit: function(event)
         {
-            var target = event.target;
-            if (target.id === "createConnectionDialog")
+            var origin = event.path[0];
+            if (origin.id === "createConnectionDialog")
             {
-                var createConnectionDialog = target;
+                var createConnectionDialog = origin;
                 var source = event.detail;
                 this._createConnection(createConnectionDialog.username, createConnectionDialog.password, source);
             }
@@ -347,8 +347,8 @@ An element that handles most of the business logic needed by FileThis Connect el
 
         _onDownload: function(event)
         {
-            var target = event.target;
-            if (target.id === "documentsPanel")
+            var origin = event.path[0];
+            if (origin.id === "documentsPanel")
             {
                 var document = event.detail;
                 this._downloadDocument(document);
@@ -416,8 +416,8 @@ An element that handles most of the business logic needed by FileThis Connect el
 
         _onUpload: function(event)
         {
-            var target = event.target;
-            if (target.id === "documentsPanel")
+            var origin = event.path[0];
+            if (origin.id === "documentsPanel")
                 this._chooseFilesToUpload();
         },
 
@@ -488,8 +488,8 @@ An element that handles most of the business logic needed by FileThis Connect el
 
         _onDelete: function(event)
         {
-            var target = event.target;
-            if (target.id === "documentsPanel")
+            var origin = event.path[0];
+            if (origin.id === "documentsPanel")
             {
                 var document = event.detail;
                 this._onDeleteDocument(document)
@@ -498,7 +498,7 @@ An element that handles most of the business logic needed by FileThis Connect el
                         this._handleError(reason);
                     }.bind(this));
             }
-            if (target.id === "connectionsPanel")
+            if (origin.id === "connectionsPanel")
             {
                 var connection = event.detail;
                 this._onDeleteConnection(connection)
