@@ -131,7 +131,8 @@ An element that handles most of the business logic needed by FileThis Connect el
             {
                 type: Array,
                 value: [],
-                notify: true
+                notify: true,
+                observer: "_onDocumentsChanged"
             },
 
             /** Version of user interaction schema to use. */
@@ -229,6 +230,11 @@ An element that handles most of the business logic needed by FileThis Connect el
         // User interaction request changes
         _createdInteractionRequests: {},
         _deletedInteractionRequests: {},
+
+        _onDocumentsChanged: function(to, from)
+        {
+            var foo = "bar";
+        },
 
         ready: function()
         {
