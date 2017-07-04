@@ -113,11 +113,11 @@ An element that handles most of the business logic needed by FileThis Connect el
                 value: []
             },
 
-            sourceFilter:
-            {
+            /** The id of the currently-selected filter. */
+            selectedFilterId: {
                 type: String,
-                value: "All",
-                observer: "_sourceFilterChanged"
+                notify: true,
+                observer: "_onSelectedFilterIdChanged"
             },
 
             connections:
@@ -152,7 +152,7 @@ An element that handles most of the business logic needed by FileThis Connect el
             poseUserInteractionsAutomatically:
             {
                 type: Boolean,
-                value: true
+                value: false
             },
 
             _uploadableFileTypes:
@@ -264,7 +264,7 @@ An element that handles most of the business logic needed by FileThis Connect el
                 this._getAllData();
         },
 
-        _sourceFilterChanged: function(to, from)
+        _onSelectedFilterIdChanged: function(to, from)
         {
             this._getSources();
         },
@@ -650,8 +650,8 @@ An element that handles most of the business logic needed by FileThis Connect el
         {
             var url = this.server + this.apiPath +
                 "/sources";
-            if (!!this.sourceFilter)
-                url += "?filter=" + this.sourceFilter.toLowerCase();
+            if (!!this.selectedFilterId)
+                url += "?filter=" + this.selectedFilterId;
             const options = this._buildHttpOptions();
             return this.httpGet(url, options)
                 .then(function(sources)
@@ -796,6 +796,9 @@ An element that handles most of the business logic needed by FileThis Connect el
                 }.bind(this));
         },
 
+        /**
+         * Poses dialog window for the next pending user interaction request, if there is one.
+         */
         poseNextPendingInteractionRequest: function()
         {
             if (this._interactionRequests.length === 0)
