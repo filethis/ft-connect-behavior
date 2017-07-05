@@ -20,13 +20,6 @@ limitations under the License.
 <link rel="import" href="../ft-error-behavior/ft-error-behavior.html">
 <link rel="import" href="../ft-http-behavior/ft-http-behavior.html">
 
-<!--
-`ft-connect-behavior`
-An element that handles most of the business logic needed by FileThis Connect element variations.
-
-@demo demo/index.html
--->
-
 
 <!-- Load Log4JavaScript library -->
 <script type="text/javascript" src="../log4javascript/log4javascript.js"></script>
@@ -36,6 +29,12 @@ An element that handles most of the business logic needed by FileThis Connect el
 
 <script>
 
+    /**
+     * `ft-connect-behavior`
+     * A behavior that can be used to build variations of FileThis Connect drop-in elements.
+     * @demo demo/index.html
+     * @polymerBehavior FtConnectBehavior
+     */
     FtConnectBehavior = {
 
         behaviors: [FtErrorBehavior, FtHttpBehavior],
@@ -286,7 +285,7 @@ An element that handles most of the business logic needed by FileThis Connect el
 
         _handleConnectionsChanged: function()
         {
-            const showConnectionPanel = (!!this.connections && this.connections.length > 0);
+            var showConnectionPanel = (!!this.connections && this.connections.length > 0);
             this._showConnectionPanel = showConnectionPanel;
         },
 
@@ -307,7 +306,7 @@ An element that handles most of the business logic needed by FileThis Connect el
 
         _handleDocumentsChanged: function()
         {
-            const showDocumentPanel = (!!this.documents && this.documents.length > 0);
+            var showDocumentPanel = (!!this.documents && this.documents.length > 0);
             this._showDocumentPanel = showDocumentPanel;
         },
 
@@ -369,11 +368,11 @@ An element that handles most of the business logic needed by FileThis Connect el
             // request, we have to pass both the ticket and the "Accept" type as URL parameters instead.
             // We had to add a new "accept" URL parameter on the server side to accommodate this. Kind of ugly...
 
-            const documentId = document.id;
+            var documentId = document.id;
 
             var url = this.server + this.apiPath +
                 "/documents/" + documentId;
-            const options = this._buildHttpOptions();
+            var options = this._buildHttpOptions();
             return this.httpGet(url, options)
                 .then(function(document)
                 {
@@ -397,11 +396,11 @@ An element that handles most of the business logic needed by FileThis Connect el
             // Best I can figure, this is some kind of cross-site problem. When call the click() method,
             // nothing happens...
 
-            const documentId = document.id;
+            var documentId = document.id;
             var url = this.server + this.apiPath +
                 "/documents/" + documentId;
 
-            const options = this._buildHttpOptions();
+            var options = this._buildHttpOptions();
             options.headers["Accept"] = "application/pdf";
             options.responseType = "blob";
 
@@ -473,10 +472,10 @@ An element that handles most of the business logic needed by FileThis Connect el
             var formData = new FormData();
 
             // Add properties to the form
-            const properties = {
+            var properties = {
                 filename: file.name
             };
-            const propertiesAsString = JSON.stringify(properties);
+            var propertiesAsString = JSON.stringify(properties);
             formData.append("properties", propertiesAsString);
 
             // Add the file to the form
@@ -484,7 +483,7 @@ An element that handles most of the business logic needed by FileThis Connect el
 
             var url = this.server + this.apiPath +
                 "/documents/";
-            const options = this._buildHttpOptions();
+            var options = this._buildHttpOptions();
 
             // We do NOT want to set the Content-Type to "multipart/form-data" explicitly here, as it MUST be done
             // by the XMLHttpRequest instance which will add it, appending the "boundary" string to it.
@@ -523,8 +522,8 @@ An element that handles most of the business logic needed by FileThis Connect el
 
         _onVisitSourceSite: function(event)
         {
-            const source = event.detail;
-            const url = source.homePageUrl;
+            var source = event.detail;
+            var url = source.homePageUrl;
             var win = window.open(url, '_blank');
             if (win)
                 win.focus();
@@ -571,7 +570,7 @@ An element that handles most of the business logic needed by FileThis Connect el
             var url = this.server + this.apiPath +
                 "/connections/" + connection.id +
                 "/fetch";
-            const options = this._buildHttpOptions();
+            var options = this._buildHttpOptions();
 
             return this.httpPost(url, options);
         },
@@ -637,7 +636,7 @@ An element that handles most of the business logic needed by FileThis Connect el
         {
             var url = this.server + this.apiPath +
                 "/accounts/" + this.userAccountId;
-            const options = this._buildHttpOptions();
+            var options = this._buildHttpOptions();
             return this.httpGet(url, options)
                 .then(function(account)
                 {
@@ -652,7 +651,7 @@ An element that handles most of the business logic needed by FileThis Connect el
                 "/sources";
             if (!!this.selectedFilterId)
                 url += "?filter=" + this.selectedFilterId;
-            const options = this._buildHttpOptions();
+            var options = this._buildHttpOptions();
             return this.httpGet(url, options)
                 .then(function(sources)
                 {
@@ -665,7 +664,7 @@ An element that handles most of the business logic needed by FileThis Connect el
         {
             var url = this.server + this.apiPath +
                 "/connections";
-            const options = this._buildHttpOptions();
+            var options = this._buildHttpOptions();
             return this.httpGet(url, options)
                 .then(function(connections)
                 {
@@ -682,7 +681,7 @@ An element that handles most of the business logic needed by FileThis Connect el
         {
             var url = this.server + this.apiPath +
                 "/connections/" + connectionId;
-            const options = this._buildHttpOptions();
+            var options = this._buildHttpOptions();
             return this.httpGet(url, options)
                 .then(function(connection)
                 {
@@ -695,7 +694,7 @@ An element that handles most of the business logic needed by FileThis Connect el
         {
             var url = this.server + this.apiPath +
                 "/connections/" + connection.id;
-            const options = this._buildHttpOptions();
+            var options = this._buildHttpOptions();
 
             return this.httpDelete(url, options);
         },
@@ -704,7 +703,7 @@ An element that handles most of the business logic needed by FileThis Connect el
         {
             var url = this.server + this.apiPath +
                 "/documents";
-            const options = this._buildHttpOptions();
+            var options = this._buildHttpOptions();
             return this.httpGet(url, options)
                 .then(function(documents)
                 {
@@ -718,7 +717,7 @@ An element that handles most of the business logic needed by FileThis Connect el
         {
             var url = this.server + this.apiPath +
                 "/documents/" + documentId;
-            const options = this._buildHttpOptions();
+            var options = this._buildHttpOptions();
             return this.httpGet(url, options)
                 .then(function(document)
                 {
@@ -731,7 +730,7 @@ An element that handles most of the business logic needed by FileThis Connect el
         {
             var url = this.server + this.apiPath +
                 "/documents/" + document.id;
-            const options = this._buildHttpOptions();
+            var options = this._buildHttpOptions();
 
             return this.httpDelete(url, options);
         },
@@ -765,7 +764,7 @@ An element that handles most of the business logic needed by FileThis Connect el
                 "/accounts/" + this.account.id +
                 "/connections/" + connectionId +
                 "/interactions/" + interactionId;
-            const options = this._buildHttpOptions();
+            var options = this._buildHttpOptions();
             return this.httpGet(url, options)
                 .then(function(interactionRequest)
                 {
@@ -782,7 +781,7 @@ An element that handles most of the business logic needed by FileThis Connect el
                 "/accounts/" + this.account.id +
                 "/connections/" + connectionId +
                 "/interactions";
-            const options = this._buildHttpOptions();
+            var options = this._buildHttpOptions();
             return this.httpGet(url, options)
                 .then(function(interactionRequests)
                 {
@@ -835,7 +834,7 @@ An element that handles most of the business logic needed by FileThis Connect el
 
             var url = this.server + this.apiPath +
                 "/connections";
-            const options = this._buildHttpOptions();
+            var options = this._buildHttpOptions();
 
             return this.httpPost(url, body, options)
                 .then(function(response)
@@ -968,8 +967,8 @@ An element that handles most of the business logic needed by FileThis Connect el
         {
             var url = this.server + this.apiPath + "/changes";
 
-            const ordinal = this._lastChangeNotificationHandledOrdinal;
-            const haveOrdinal = !!ordinal;
+            var ordinal = this._lastChangeNotificationHandledOrdinal;
+            var haveOrdinal = !!ordinal;
             if (haveOrdinal)
             {
                 // Ask for notifications after the ordinal
@@ -978,14 +977,14 @@ An element that handles most of the business logic needed by FileThis Connect el
             else
             {
                 // Ask for notifications after "now"
-                const now = new Date();
+                var now = new Date();
                 var timestampWithMilliseconds = now.toISOString();
                 var timestamp = timestampWithMilliseconds.split('.')[0] + "Z";
                 var timestampUrlEncoded = encodeURIComponent(timestamp);
                 url += "?from=" + timestampUrlEncoded;
                 url += "&dummy=true";  // Ask for a dummy notification, if there are no real ones
             }
-            const options = this._buildHttpOptions();
+            var options = this._buildHttpOptions();
             return this.httpGet(url, options)
                 .then(function(changeNotifications)
                 {
@@ -996,9 +995,9 @@ An element that handles most of the business logic needed by FileThis Connect el
                     changeNotifications = changeNotifications.sort(function(a, b) { return a.id > b.id; });
 
                     // Cache the id of the the newest
-                    const lastNotificationIndex = changeNotifications.length - 1;
-                    const lastNotification = changeNotifications[lastNotificationIndex];
-                    const lastNotificationId = lastNotification.id;
+                    var lastNotificationIndex = changeNotifications.length - 1;
+                    var lastNotification = changeNotifications[lastNotificationIndex];
+                    var lastNotificationId = lastNotification.id;
                     this._lastChangeNotificationHandledOrdinal = lastNotificationId;
 
                     // If we got the dummy record, filter it out
