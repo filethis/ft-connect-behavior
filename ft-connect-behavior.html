@@ -132,8 +132,7 @@ limitations under the License.
             {
                 type: Array,
                 value: [],
-                notify: true,
-                observer: "_onDocumentsChanged"
+                notify: true
             },
 
             /** Version of user interaction schema to use. */
@@ -231,11 +230,6 @@ limitations under the License.
         // User interaction request changes
         _createdInteractionRequests: {},
         _deletedInteractionRequests: {},
-
-        _onDocumentsChanged: function(to, from)
-        {
-            var foo = "bar";
-        },
 
         ready: function()
         {
