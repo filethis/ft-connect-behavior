@@ -66,11 +66,11 @@ limitations under the License.
         properties: {
 
             /** When true, we are live */
-            enabled:
+            live:
             {
                 type: Boolean,
                 value: false,
-                observer: "_onEnabledChanged"
+                observer: "_onLiveChanged"
             },
 
             /** The "base" URL for requests. For example: "https://filethis.com". Note that you should not use a trailing slash. */
@@ -242,7 +242,7 @@ limitations under the License.
         {
             if (!this.pollForChangeNotifications)
                 return;
-            if (!this.enabled)
+            if (!this.live)
                 return;
             if (this._processingChangeNotifications)
                 return;
@@ -250,12 +250,12 @@ limitations under the License.
             this._processChangeNotifications();
         },
 
-        _onEnabledChanged: function(to, from)
+        _onLiveChanged: function(to, from)
         {
             this._lastChangeNotificationHandledOrdinal = null;
             this._processingChangeNotifications = false;
 
-            if (this.enabled)
+            if (this.live)
                 this._getAllData();
         },
 
@@ -938,7 +938,7 @@ limitations under the License.
                     this._handleError(reason);
 
                     // If we're still live (eg. the user token did not just expire)
-                    if (this.enabled)
+                    if (this.live)
                     {
                         // Fall back to doing a full refresh of all data
                         log.warn("Falling back on doing a full refresh of all data after failure to use change notifications.");
@@ -1505,7 +1505,7 @@ limitations under the License.
         _handleError: function(error)
         {
             // Let our parents figure out what to do. They will probably ground us by setting our
-            // "enabled" property to false.
+            // "live" property to false.
             this.fire("ft-connect-error", error);
         }
 
