@@ -32,9 +32,11 @@ limitations under the License.
     window.FileThis = window.FileThis || {};
 
     /**
-     * `ft-connect-behavior`
-     * A behavior that can be used to build variations of FileThis Connect drop-in elements.
-     * @demo demo/index.html
+     * `<ft-connect-behavior>`
+     *
+     * A behavior that defines most of the business logic needed to implement the variations of the FileThis Connect drop-in elements.
+     *
+     * @demo
      * @polymerBehavior FileThis.ConnectBehavior
      */
     FileThis.ConnectBehavior = {
@@ -65,7 +67,13 @@ limitations under the License.
 
         properties: {
 
-            /** When true, we are live */
+            /**
+             * When true, the element is "live" and will communicate with the FileThis service.
+             *
+             * Note that you can provide the strings "true" and "false" as attribute values.
+             *
+             * @type {boolean}
+             */
             live:
             {
                 type: Object,
@@ -73,7 +81,7 @@ limitations under the License.
                 observer: "_onLiveChanged"
             },
 
-            /** The "base" URL for requests. For example: "https://filethis.com". Note that you should not use a trailing slash. */
+            /** The "base" URL for requests. For example: "https://filethis.com". Note that you should __not__ use a trailing slash. */
             server:
             {
                 type: String,
@@ -100,6 +108,7 @@ limitations under the License.
                 value: ""
             },
 
+            /** The user's FileThis account resource. */
             account:
             {
                 type: Object,
@@ -107,6 +116,7 @@ limitations under the License.
                 value: null
             },
 
+            /** The list FileThis source (fetchable website) resources. */
             sources:
             {
                 type: Array,
@@ -121,6 +131,7 @@ limitations under the License.
                 observer: "_onSelectedFilterIdChanged"
             },
 
+            /** The list of all the user's FileThis connection resources. */
             connections:
             {
                 type: Array,
@@ -128,6 +139,7 @@ limitations under the License.
                 notify: true
             },
 
+            /** The list of all the user's FileThis fetched document resources. */
             documents:
             {
                 type: Array,
@@ -142,6 +154,7 @@ limitations under the License.
                 value: "1.0.0"
             },
 
+            /** The list of all pending user interaction resources. */
             _interactionRequests:
             {
                 type: Array,
@@ -155,7 +168,7 @@ limitations under the License.
                 value: true
             },
 
-            /** When set, various debugging options are enabled. */
+            /** When set, various debugging options are enabled, including the display of a log4javascript log window and the injection of the FileThis fake test site into the list of all sources. */
             debug:
             {
                 type: Object,
@@ -163,7 +176,7 @@ limitations under the License.
                 notify: true
             },
 
-            /** When set, fake local data is used. */
+            /** When set, fake local data is used. Note that many functions that operate on FileThis resouces will not work with this fake data. This is useful for rendering the UI in a quiescent state so that it "looks good". */
             demo:
             {
                 type: Object,
@@ -185,17 +198,20 @@ limitations under the License.
                 value: "application/pdf"
             },
 
+            /** The current user interaction request being handled. */
             _interactionRequest:
             {
                 type: Object
             },
 
+            /** The URL for the current document download. */
             _downloadUrl:
             {
                 type: String,
                 value: ""
             },
 
+            /** The filename for the current document download. */
             _downloadFilename:
             {
                 type: String,
@@ -207,7 +223,11 @@ limitations under the License.
                 type: Object
             },
 
-            // TODO: Remove once polling is done
+            /**
+             * A flag that controls whether this component should poll the FileThis service for new pending change notification resources.
+             *
+             * Note that this property will likely go away once the component supports websockets.
+             */
             pollForChangeNotifications:
             {
                 type: Boolean,
@@ -257,6 +277,10 @@ limitations under the License.
 
         ready: function()
         {
+            // TODO: We would prefer not to load the library at all.
+            // If the log4javascript code were wrapped in a polymer element, we could use _template_ with _dom-if_.
+            log4javascript.setEnabled(this.debug);
+
             log.info("Ready");
 
             setInterval(this._changeNotificationPoller.bind(this), 1000);  // Poll for change notifications
@@ -639,6 +663,12 @@ limitations under the License.
             this.$.modalInteractionDialog.open();
         },
 
+        /**
+         * Refresh all resource data by asking the server for it. There is normally no reason to call this method
+         * explicitly, as it is called automatically when the element is first connected to the server.
+         *
+         * @return {Object} A promise that resolves when all data has been gotten.
+         */
         getAllData: function()
         {
             Promise.resolve()
