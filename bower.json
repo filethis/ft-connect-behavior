@@ -4,10 +4,10 @@
   "main": "ft-connect-behavior.html",
   "dependencies": {
     "polymer": "Polymer/polymer#1.9 - 2",
-    "ft-confirmation-dialog": "filethis/ft-confirmation-dialog#^0.0.12",
-    "ft-error-behavior": "filethis/ft-error-behavior#^0.0.10",
-    "ft-http-behavior": "filethis/ft-http-behavior#^0.0.10",
-    "ft-scrolling-behavior": "filethis/ft-scrolling-behavior#^0.0.7",
+    "ft-confirmation-dialog": "filethis/ft-confirmation-dialog#^0.0.13",
+    "ft-error-behavior": "filethis/ft-error-behavior#^0.0.11",
+    "ft-http-behavior": "filethis/ft-http-behavior#^0.0.11",
+    "ft-scrolling-behavior": "filethis/ft-scrolling-behavior#^0.0.8",
     "log4javascript": "^1.4.9"
   },
   "devDependencies": {
