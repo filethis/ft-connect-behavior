@@ -270,6 +270,7 @@ limitations under the License.
         _updatedConnections: {},
         _updatedConnectionStateProperties: {},
         _updatedConnectionValidationProperties: {},
+        _updatedConnectionDocumentCountProperties: {},
 
         // User interaction request changes
         _createdInteractionRequests: {},
@@ -1102,6 +1103,7 @@ limitations under the License.
         _connectionPattern: /^\/connections\/([a-zA-Z0-9]+)$/,
         _connectionStatePattern: /^\/connections\/([a-zA-Z0-9]+)\/state\/([a-zA-Z]+)$/,
         _connectionValidationPattern: /^\/connections\/([a-zA-Z0-9]+)\/validation\/([a-zA-Z]+)$/,
+        _connectionDocumentCountPattern: /^\/connections\/([a-zA-Z0-9]+)\/documentCount\/([0-9]+)$/,
         _interactionPattern: /^\/connections\/([a-zA-Z0-9]+)\/interactions\/([a-zA-Z0-9]+)$/,
         _documentPattern: /^\/documents\/([a-zA-Z0-9]+)$/,
         _derivativePattern: /^\/documents\/([a-zA-Z0-9]+)\/derivatives\/(thumbnail-medium)$/,  // TODO: For now
@@ -1173,6 +1175,8 @@ limitations under the License.
                     return;
                 if (this._recordConnectionValidationChanged(type, resource))
                     return;
+                if (this._recordConnectionDocumentCountChanged(type, resource))
+                    return;
                 if (this._recordInteractionChanged(type, resource))
                     return;
                 log.error("Unrecognized change notification: " + type + " " + resource);
@@ -1189,6 +1193,7 @@ limitations under the License.
             this._updatedConnections = {};
             this._updatedConnectionStateProperties = {};
             this._updatedConnectionValidationProperties = {};
+            this._updatedConnectionDocumentCountProperties = {};
             this._createdInteractionRequests = {};
             this._deletedInteractionRequests = {};
         },
@@ -1310,6 +1315,28 @@ limitations under the License.
             return true;
         },
 
+        _recordConnectionDocumentCountChanged: function(type, resource)
+        {
+            var match = this._connectionDocumentCountPattern.exec(resource);
+            if (match === null)
+                return false;
+
+            var connectionId = match[1];
+            var documentCount = match[2];
+
+            switch (type)
+            {
+                case "updated":
+                    this._updatedConnectionDocumentCountProperties[connectionId] = parseInt(documentCount);
+                    break;
+                default:
+                    log.error("Unrecognized notification type for connection resource 'documentCount' property: " + type);
+                    break;
+            }
+
+            return true;
+        },
+
         _recordInteractionChanged: function(type, resource)
         {
             var match = this._interactionPattern.exec(resource);
@@ -1363,6 +1390,7 @@ limitations under the License.
                 // Remove any property update records for this connection because they no longer matter
                 delete this._updatedConnectionStateProperties[deletedConnectionId];
                 delete this._updatedConnectionValidationProperties[deletedConnectionId];
+                delete this._updatedConnectionDocumentCountProperties[deletedConnectionId];
 
                 // Remove any records for user interaction requests that are children of this deleted connection
                 this._removeInteractionRecordWithParentConnection(deletedConnectionId, this._createdInteractionRequests);
@@ -1379,6 +1407,7 @@ limitations under the License.
                 // Remove any property update records for this connection because we will get the whole connection, shortly
                 delete this._updatedConnectionStateProperties[createdConnectionId];
                 delete this._updatedConnectionValidationProperties[createdConnectionId];
+                delete this._updatedConnectionDocumentCountProperties[createdConnectionId];
             }.bind(this));
 
             // For each document creation record
@@ -1445,12 +1474,6 @@ limitations under the License.
                 var newState = this._updatedConnectionStateProperties[connectionId];
                 var connection = this._findObjectWithIdInList(connectionId, this.connections);
                 this._setPropertyOfObjectInListProperty("state", newState, connection, this.connections, "connections");
-
-                // HACK
-                Promise.resolve().then(this._getConnections.bind(this));
-
-//                this.notifyPath('connections');
-
             }.bind(this));
             this._updatedConnectionStateProperties = {};
 
@@ -1463,6 +1486,16 @@ limitations under the License.
                 this._setPropertyOfObjectInListProperty("validation", newValidation, connection, this.connections, "connections");
             }.bind(this));
             this._updatedConnectionValidationProperties = {};
+
+            // Update updated connection documentCount properties
+            var updatedConnectionDocumentCountProperties = Object.keys(this._updatedConnectionDocumentCountProperties);
+            updatedConnectionDocumentCountProperties.forEach(function(connectionId)
+            {
+                var newDocumentCount = this._updatedConnectionDocumentCountProperties[connectionId];
+                var connection = this._findObjectWithIdInList(connectionId, this.connections);
+                this._setPropertyOfObjectInListProperty("documentCount", newDocumentCount, connection, this.connections, "connections");
+            }.bind(this));
+            this._updatedConnectionDocumentCountProperties = {};
         },
 
         _handleCreatedDocumentRecordedChangeNotifications: function()
