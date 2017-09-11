@@ -1495,7 +1495,7 @@ limitations under the License.
                 var connection = this._findObjectWithIdInList(connectionId, this.connections);
                 this._setPropertyOfObjectInListProperty("documentCount", newDocumentCount, connection, this.connections, "connections");
             }.bind(this));
-            this._updatedConnectionDocumentCountProperties = {};
+            this._updatedConnectionValidationProperties = {};
         },
 
         _handleCreatedDocumentRecordedChangeNotifications: function()
