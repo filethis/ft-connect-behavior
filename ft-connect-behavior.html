@@ -41,7 +41,10 @@ limitations under the License.
      */
     FileThis.ConnectBehavior = {
 
-        behaviors: [FileThis.ErrorBehavior, FileThis.HttpBehavior],
+        behaviors: [
+            FileThis.ErrorBehavior,
+            FileThis.HttpBehavior
+        ],
 
         listeners:
         {
@@ -62,9 +65,7 @@ limitations under the License.
             '_onDocumentsSplicedChanged(documents.splices)',
 
             '_onInteractionRequestsListChanged(_interactionRequests)',
-            '_onInteractionRequestsSplicesChanged(_interactionRequests.splices)',
-
-            "_onPanelCodeChanged(_sourcesCode, _connectionsCode, _documentsCode)"
+            '_onInteractionRequestsSplicesChanged(_interactionRequests.splices)'
         ],
 
         properties: {
@@ -250,41 +251,8 @@ limitations under the License.
                 type: Boolean,
                 notify: true,
                 value: false
-            },
-
-            _sourcesCode: {
-                type: String,
-                value: ""
-            },
-
-            _connectionsCode: {
-                type: String,
-                value: ""
-            },
-
-            _documentsCode: {
-                type: String,
-                value: ""
-            },
-
-            codeTemplatePath:
-            {
-                type: String,
-                value: "",
-                observer: "_codeTemplatePathChanged"
-            },
-
-            codeTemplate:
-            {
-                type: String,
-                value: ""
-            },
-
-            code: {
-                type: String,
-                notify: true,
-                value: ""
             }
+
         },
 
 
@@ -320,33 +288,6 @@ limitations under the License.
             log.info("Ready");
 
             setInterval(this._changeNotificationPoller.bind(this), 1000);  // Poll for change notifications
-        },
-
-        _codeTemplatePathChanged: function(to, from)
-        {
-            if (!to)
-                return;
-            this._loadCodeTemplate(this.codeTemplatePath);
-        },
-
-        _loadCodeTemplate: function(path)
-        {
-            var options = {
-                headers: {
-                    accept: "text/plain;charset=utf-8"
-                },
-                responseType: "text"
-            };
-            return this.httpGet(path, options)
-                .then(function(codeTemplate)
-                {
-                    this.codeTemplate = codeTemplate;
-                }.bind(this))
-                .catch(function(error)
-                {
-                    // Ignore
-                    var foo = "bar";
-                }.bind(this));
         },
 
         _changeNotificationPoller: function()
@@ -1745,30 +1686,6 @@ limitations under the License.
                     "X-FileThis-Session": this.token
                 }
             };
-        },
-
-
-        // Code
-
-        _onPanelCodeChanged: function(to, from)
-        {
-            this._panelCodeChangedDebouncer = Polymer.Debouncer.debounce
-            (
-                this._panelCodeChangedDebouncer,
-                Polymer.Async.timeOut.after(60),
-                this._onPanelCodeChangedDebounced.bind(this)
-            );
-        },
-
-        _onPanelCodeChangedDebounced: function()
-        {
-            var code = this.codeTemplate.slice();
-            code = code.replace(/{{NAME}}/g, "ft-connect-minimal-site");
-            code = code.replace(/{{FILETHIS_CONNECT_VARIANT_NAME}}/g, "ft-connect-tabbed");
-            code = code.replace(/{{sources}}/g, this._sourcesCode);
-            code = code.replace(/{{sources}}/g, this._connectionsCode);
-            code = code.replace(/{{documents}}/g, this._documentsCode);
-            this.code = code;
         },
 
 
