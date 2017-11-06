@@ -48,13 +48,14 @@ limitations under the License.
 
         listeners:
         {
-            'commit': '_onCommit',
-            'download': '_onDownload',
-            'upload': '_onUpload',
-            'delete': '_onDelete',
-            'action-button-clicked': '_onActionButtonClicked',
-            'visit-source-site': '_onVisitSourceSite',
-            'is-this-safe': '_onIsThisSafe'
+            'create-connection-command': '_onCreateConnectionCommandInternal',
+            'download-documents-command': '_onDownloadDocumentsCommand',
+            'upload-documents-command': '_onUploadDocumentsCommand',
+            'delete-connection-command': '_onDeleteConnectionCommand',
+            'delete-document-command': '_onDeleteDocumentCommand',
+            'action-command': '_onActionCommand',
+            'visit-source-site-command': '_onVisitSourceSiteCommand',
+            'is-this-safe-command': '_onIsThisSafeCommand'
         },
 
         observers:[
@@ -387,25 +388,19 @@ limitations under the License.
 
         // User action event handling --------------------------------------------------------------------------
 
-        _onCommit: function(event)
+        _onCreateConnectionCommandInternal: function(event)
         {
-            var origin = event.path[0];
-            if (origin.id === "createConnectionDialog")
-            {
-                var createConnectionDialog = origin;
-                var source = event.detail;
-                this._createConnection(createConnectionDialog.username, createConnectionDialog.password, source);
-            }
+            var createConnectionDialog = event.detail;
+            var username = createConnectionDialog.username;
+            var password = createConnectionDialog.password;
+            var source = createConnectionDialog.source;
+            this._createConnection(username, password, source);
         },
 
-        _onDownload: function(event)
+        _onDownloadDocumentsCommand: function(event)
         {
-            var origin = event.path[0];
-            if (origin.id === "documentsPanel")
-            {
-                var document = event.detail;
-                this._downloadDocument(document);
-            }
+            var document = event.detail;
+            this._downloadDocument(document);
         },
 
         _downloadDocument: function(document)
@@ -473,11 +468,9 @@ limitations under the License.
                 }.bind(this));
         },
 
-        _onUpload: function(event)
+        _onUploadDocumentsCommand: function(event)
         {
-            var origin = event.path[0];
-            if (origin.id === "documentsPanel")
-                this._chooseFilesToUpload();
+            this._chooseFilesToUpload();
         },
 
         _chooseFilesToUpload: function()
@@ -548,36 +541,33 @@ limitations under the License.
             return this.httpPost(url, formData, options);
         },
 
-        _onDelete: function(event)
+        _onDeleteDocumentCommand: function(event)
         {
-            var origin = event.path[0];
-            if (origin.id === "documentsPanel")
-            {
-                var document = event.detail;
-                this._onDeleteDocument(document)
-                    .catch(function(reason)
-                    {
-                        this._handleError(reason);
-                    }.bind(this));
-            }
-            if (origin.id === "connectionsPanel")
-            {
-                var connection = event.detail;
-                this._onDeleteConnection(connection)
-                    .catch(function(reason)
-                    {
-                        this._handleError(reason);
-                    }.bind(this));
-            }
+            var document = event.detail;
+            this._onDeleteDocument(document)
+                .catch(function(reason)
+                {
+                    this._handleError(reason);
+                }.bind(this));
         },
 
-        _onActionButtonClicked: function(event)
+        _onDeleteConnectionCommand: function(event)
+        {
+            var connection = event.detail;
+            this._onDeleteConnection(connection)
+                .catch(function(reason)
+                {
+                    this._handleError(reason);
+                }.bind(this));
+        },
+
+        _onActionCommand: function(event)
         {
             var connection = event.detail;
             this._handleConnectionAction(connection);
         },
 
-        _onVisitSourceSite: function(event)
+        _onVisitSourceSiteCommand: function(event)
         {
             var source = event.detail;
             var url = source.homePageUrl;
@@ -588,7 +578,7 @@ limitations under the License.
                 this.$.confirmationDialog.alert("Please allow popups for this site");
         },
 
-        _onIsThisSafe: function(event)
+        _onIsThisSafeCommand: function(event)
         {
             this.$.confirmationDialog.alert("We use bank-level encryption to keep your credentials safe.");
         },
@@ -1761,7 +1751,52 @@ limitations under the License.
             // Let our parents figure out what to do. They will probably ground us by setting our
             // "live" property to false.
             this.fire("ft-connect-error", error);
-        }
+        },
+
+
+        // TODO: These methods are duplicated in ft-wizard-finish-panel. Refactor to eliminate duplication.
+
+        someConnectionStillRunning: function()
+        {
+            var count = this.connections.length;
+            for (var index = 0; index < count; index++)
+            {
+                var connection = this.connections[index];
+                if (this.connectionStillRunning(connection))
+                    return true;
+            }
+            return false;
+        },
+
+        someConnectionHasPendingInteraction: function()
+        {
+            var count = this.connections.length;
+            for (var index = 0; index < count; index++)
+            {
+                var connection = this.connections[index];
+                if (this.connectionHasPendingInteraction(connection))
+                    return true;
+            }
+            return false;
+        },
+
+        connectionStillRunning: function(connection)
+        {
+            switch (connection.state)
+            {
+                case "waiting":
+                case "error":
+                case "question":
+                    return false;
+                default:
+                    return true;
+            }
+        },
+
+        connectionHasPendingInteraction: function(connection)
+        {
+            return (connection.state === "question");
+        },
 
     };
 
