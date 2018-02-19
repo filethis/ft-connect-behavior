@@ -81,7 +81,7 @@ limitations under the License.
             live:
             {
                 type: Object,
-                value: false,
+                value: true,
                 observer: "_onLiveChanged"
             },
 
@@ -172,7 +172,7 @@ limitations under the License.
                 value: true
             },
 
-            /** When set, various debugging options are enabled, including the display of a log4javascript log window and the injection of the FileThis fake test site into the list of all sources. */
+            /** When set, various debugging options are enabled, including the display of a log4javascript log window. */
             debug:
             {
                 type: Object,
@@ -180,8 +180,16 @@ limitations under the License.
                 notify: true
             },
 
+            /** When set, the fake institutions are injected into the list of sources. */
+            fakeSources:
+            {
+                type: Object,
+                value: false,
+                notify: true
+            },
+
             /** When set, fake local data is used. Note that many functions that operate on FileThis resources will not work with this fake data. This is useful for rendering the UI in a quiescent state so that it "looks good". */
-            fake:
+            fakeData:
             {
                 type: Object,
                 value: false,
@@ -405,7 +413,7 @@ limitations under the License.
 
         _downloadDocument: function(document)
         {
-            if (this.fake)
+            if (this.fakeData)
                 return Promise.resolve();
 
             // NOTE: This is not an ideal way to download documents, but I could not get the standard method
@@ -438,7 +446,7 @@ limitations under the License.
 
         _downloadDocumentShouldWorkButDoesNot: function(document)
         {
-            if (this.fake)
+            if (this.fakeData)
                 return Promise.resolve();
 
             // TODO: Spent a lot of time trying to get this standard method for downloading files to work.
@@ -516,7 +524,7 @@ limitations under the License.
 
         _uploadFile: function(file)
         {
-            if (this.fake)
+            if (this.fakeData)
                 return Promise.resolve([]);
 
             // Create a FormData instance
@@ -603,7 +611,7 @@ limitations under the License.
 
         _startManualFetch: function(connection)
         {
-            if (this.fake)
+            if (this.fakeData)
                 return Promise.resolve();
 
             // TODO: Shouldn't we disable the fetch button to prevent double-clicking?
@@ -682,7 +690,7 @@ limitations under the License.
 
         _getAccount: function()
         {
-            if (this.fake)
+            if (this.fakeData)
             {
                 return new Promise(function(fulfill)
                 {
@@ -705,7 +713,7 @@ limitations under the License.
 
         _getSources: function()
         {
-            if (this.fake)
+            if (this.fakeData)
             {
                 var fakeDataUrl = this.fakeDataPath + "fake-sources.json";
                 return this.httpGet(fakeDataUrl)
@@ -724,7 +732,7 @@ limitations under the License.
             return this.httpGet(url, options)
                 .then(function(sources)
                 {
-                    if (this.debug && this.selectedFilterId === "all")
+                    if (this.fakeSources && this.selectedFilterId === "all")
                         this._prependFakeSource(sources);
                     this.sources = sources;
                     return sources;
@@ -733,7 +741,7 @@ limitations under the License.
 
         _getConnections: function()
         {
-            if (this.fake)
+            if (this.fakeData)
             {
                 var fakeDataUrl = this.fakeDataPath + "fake-connections.json";
                 return this.httpGet(fakeDataUrl)
@@ -761,7 +769,7 @@ limitations under the License.
 
         _getConnection: function(connectionId)
         {
-            if (this.fake)
+            if (this.fakeData)
                 return Promise.resolve();  // Will not make the caller happy...
 
             var url = this.server + this.apiPath +
@@ -777,7 +785,7 @@ limitations under the License.
 
         _onDeleteConnection: function(connection)
         {
-            if (this.fake)
+            if (this.fakeData)
                 return Promise.resolve();
 
             var url = this.server + this.apiPath +
@@ -789,7 +797,7 @@ limitations under the License.
 
         _getDocuments: function()
         {
-            if (this.fake)
+            if (this.fakeData)
             {
                 var fakeDataUrl = this.fakeDataPath + "fake-documents.json";
                 return this.httpGet(fakeDataUrl)
@@ -820,7 +828,7 @@ limitations under the License.
 
         _getDocument: function(documentId)
         {
-            if (this.fake)
+            if (this.fakeData)
                 return Promise.resolve();  // Will not make the caller happy...
 
             var url = this.server + this.apiPath +
@@ -836,7 +844,7 @@ limitations under the License.
 
         _onDeleteDocument: function(document)
         {
-            if (this.fake)
+            if (this.fakeData)
                 return Promise.resolve();
 
             var url = this.server + this.apiPath +
@@ -856,7 +864,7 @@ limitations under the License.
         {
             this._interactionRequests = [];
 
-            if (this.fake)
+            if (this.fakeData)
             {
                 var version = this.interactionVersion;
                 var url;
@@ -889,7 +897,7 @@ limitations under the License.
 
         _getInteractionRequest: function(connectionId, interactionId)
         {
-            if (this.fake)
+            if (this.fakeData)
                 return Promise.resolve();  // Will not make the caller happy...
 
             var url = this.server + this.apiPath +
@@ -909,7 +917,7 @@ limitations under the License.
 
         _getConnectionInteractionRequests: function(connectionId)
         {
-            if (this.fake)
+            if (this.fakeData)
                 return Promise.resolve([]);
 
             var url = this.server + this.apiPath +
@@ -958,7 +966,7 @@ limitations under the License.
 
         _createConnection: function(username, password, source)
         {
-            if (this.fake)
+            if (this.fakeData)
                 return Promise.resolve();
 
             var sourceId = source.id;
@@ -978,7 +986,7 @@ limitations under the License.
                 .then(function(response)
                 {
                     var connectionId = response.id.toString();
-                    log.debug("Created connection with id: " + connectionId);
+                    log("Created connection with id: " + connectionId);
                     return connectionId;
                 }.bind(this))
                 .catch(function(reason)
@@ -1104,7 +1112,7 @@ limitations under the License.
 
         _getAllChangeNotifications: function()
         {
-            if (this.fake)
+            if (this.fakeData)
                 return Promise.resolve([]);
 
             var url = this.server + this.apiPath + "/changes";
@@ -1157,7 +1165,7 @@ limitations under the License.
                 var type = notification.type;
                 var resource = notification.resource;
 
-                log.debug("Received change notification: " + type + "  " + resource);
+                log("Received change notification: " + type + "  " + resource);
 
                 if (this._recordDocumentChanged(type, resource))
                     return;

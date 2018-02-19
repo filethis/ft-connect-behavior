@@ -1,6 +1,6 @@
 # Project configuration
 NAME=ft-connect-behavior
-VERSION=0.0.15
+VERSION=0.0.16
 LOCAL_PORT=3504
 GITHUB_USER=filethis
 GITHUB_USER_ABBREV=ft
