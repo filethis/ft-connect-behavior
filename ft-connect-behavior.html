@@ -22,9 +22,7 @@ limitations under the License.
 
 <!-- Load Log4JavaScript library -->
 <script type="text/javascript" src="../log4javascript/log4javascript.js"></script>
-<script type="text/javascript">
-    var log = log4javascript.getDefaultLogger();
-</script>
+
 
 <script>
 
@@ -294,7 +292,7 @@ limitations under the License.
             // If the log4javascript code were wrapped in a polymer element, we could use _template_ with _dom-if_.
             log4javascript.setEnabled(this.debug);
 
-            log.info("Ready");
+            this.logInfo("Ready");
 
             setInterval(this._changeNotificationPoller.bind(this), 1000);  // Poll for change notifications
         },
@@ -634,7 +632,7 @@ limitations under the License.
             // If we already have a dialog posed
             if (this.$.modalInteractionDialog.opened)
             {
-                log.info("There is already a user interaction request dialog posed");
+                this.logInfo("There is already a user interaction request dialog posed");
                 return;
             }
 
@@ -986,7 +984,7 @@ limitations under the License.
                 .then(function(response)
                 {
                     var connectionId = response.id.toString();
-                    log("Created connection with id: " + connectionId);
+                    this.logInfo("Created connection with id: " + connectionId);
                     return connectionId;
                 }.bind(this))
                 .catch(function(reason)
@@ -1091,7 +1089,7 @@ limitations under the License.
                     if (this.live)
                     {
                         // Fall back to doing a full refresh of all data
-                        log.warn("Falling back on doing a full refresh of all data after failure to use change notifications.");
+                        this.logInfo("Falling back on doing a full refresh of all data after failure to use change notifications.");
                         this.getAllData();
                     }
                     else
@@ -1165,7 +1163,7 @@ limitations under the License.
                 var type = notification.type;
                 var resource = notification.resource;
 
-                log("Received change notification: " + type + "  " + resource);
+                this.logInfo("Received change notification: " + type + "  " + resource);
 
                 if (this._recordDocumentChanged(type, resource))
                     return;
@@ -1181,7 +1179,7 @@ limitations under the License.
                     return;
                 if (this._recordInteractionChanged(type, resource))
                     return;
-                log.error("Unrecognized change notification: " + type + " " + resource);
+                this.logError("Unrecognized change notification: " + type + " " + resource);
             }.bind(this));
         },
 
@@ -1217,7 +1215,7 @@ limitations under the License.
                     this._deletedDocuments[documentId] = null;
                     break;
                 default:
-                    log.error("Unrecognized notification type for document resource: " + type);
+                    this.logError("Unrecognized notification type for document resource: " + type);
                     break;
             }
 
@@ -1239,7 +1237,7 @@ limitations under the License.
                     this._createdDerivatives[documentId] = derivativeId;
                     break;
                 default:
-                    log.error("Unrecognized notification type for derivative resource: " + type);
+                    this.logError("Unrecognized notification type for derivative resource: " + type);
                     break;
             }
 
@@ -1266,7 +1264,7 @@ limitations under the License.
                     this._deletedConnections[connectionId] = null;
                     break;
                 default:
-                    log.error("Unrecognized notification type for connection resource: " + type);
+                    this.logError("Unrecognized notification type for connection resource: " + type);
                     break;
             }
 
@@ -1288,7 +1286,7 @@ limitations under the License.
                     this._updatedConnectionStateProperties[connectionId] = newState;
                     break;
                 default:
-                    log.error("Unrecognized notification type for connection resource 'state' property: " + type);
+                    this.logError("Unrecognized notification type for connection resource 'state' property: " + type);
                     break;
             }
 
@@ -1310,7 +1308,7 @@ limitations under the License.
                     this._updatedConnectionValidationProperties[connectionId] = validation;
                     break;
                 default:
-                    log.error("Unrecognized notification type for connection resource 'validation' property: " + type);
+                    this.logError("Unrecognized notification type for connection resource 'validation' property: " + type);
                     break;
             }
 
@@ -1332,7 +1330,7 @@ limitations under the License.
                     this._updatedConnectionDocumentCountProperties[connectionId] = parseInt(documentCount);
                     break;
                 default:
-                    log.error("Unrecognized notification type for connection resource 'documentCount' property: " + type);
+                    this.logError("Unrecognized notification type for connection resource 'documentCount' property: " + type);
                     break;
             }
 
@@ -1357,7 +1355,7 @@ limitations under the License.
                     this._deletedInteractionRequests[interactionId] = connectionId;
                     break;
                 default:
-                    log.error("Unrecognized notification type for user interaction resource: " + type);
+                    this.logError("Unrecognized notification type for user interaction resource: " + type);
                     break;
             }
 
@@ -1655,7 +1653,7 @@ limitations under the License.
             var objectIndexInList = this._indexOfObjectWithIdInList(objectId, list);
             if (objectIndexInList === -1)
             {
-                log.warn("Attempt to set property of object that is not in given list");
+                this.logWarn("Attempt to set property of object that is not in given list");
                 return;
             }
 
@@ -1805,6 +1803,42 @@ limitations under the License.
         connectionHasPendingInteraction: function(connection)
         {
             return (connection.state === "question");
+        },
+
+        logInfo: function(message)
+        {
+            var logger = this._getLogger();
+            if (!logger)
+                return;
+            logger.info(message);
+        },
+
+        logWarn: function(message)
+        {
+            var logger = this._getLogger();
+            if (!logger)
+                return;
+            logger.warn(message);
+        },
+
+        logError: function(message)
+        {
+            var logger = this._getLogger();
+            if (!logger)
+                return;
+            logger.error(message);
+        },
+
+        _getLogger: function()
+        {
+            var logger = log4javascript.getDefaultLogger();
+            if (!logger)
+                return null;
+            if (!logger.hasOwnProperty("log"))
+                return null;
+            if (typeof logger !== "function")
+                return null;
+            return logger;
         },
 
     };
