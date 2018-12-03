@@ -1,7 +1,7 @@
 # Project configuration
 NAME=ft-connect-behavior
 SRC_DIR=
-VERSION=1.0.20
+VERSION=1.0.21
 LOCAL_PORT=3504
 GITHUB_USER=filethis
 GITHUB_USER_ABBREV=ft
