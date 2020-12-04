@@ -1,7 +1,7 @@
 {
   "description": "An element that handles most of the business logic needed by FileThis Connect element variations.",
-  "name": "filethis/ft-connect-behavior",
-  "version": "filethis/1.0.21",
+  "name": "ft-connect-behavior",
+  "version": "1.0.21",
   "resolutions": {
     "inherits": "2.0.3",
     "samsam": "1.1.3",
