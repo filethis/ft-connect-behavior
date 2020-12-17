@@ -1,0 +1,21 @@
+{
+  "version": "v1",
+  "packages": {
+    "ft-confirmation-dialog": {
+      "signature": "67e8a0df66a69ab6b858b258ced2a11c",
+      "file": true
+    },
+    "ft-error-behavior": {
+      "signature": "1b335d84711be52d0d40e327e3c1e76a",
+      "file": true
+    },
+    "ft-http-behavior": {
+      "signature": "43ccf0b053cd81cc1edefea84505c2ef",
+      "file": true
+    },
+    "ft-scrolling-behavior": {
+      "signature": "5d9503fef8bc07bc2ddab3f8ff61068e",
+      "file": true
+    }
+  }
+}

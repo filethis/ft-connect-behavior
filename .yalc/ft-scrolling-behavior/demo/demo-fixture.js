@@ -1,8 +1,8 @@
-/* ft-connect-behavior element demo */
+/* ft-scrolling-behavior element demo */
 /* Imports */
 /**
 
-An element that handles most of the business logic needed by FileThis Connect element variations.
+A behavior that helps with scrolling of elements.
 
 @demo
  */
@@ -14,7 +14,7 @@ An element that handles most of the business logic needed by FileThis Connect el
 
 import '@polymer/iron-flex-layout/iron-flex-layout-classes.js';
 import '@polymer/polymer/polymer-legacy.js';
-import '../ft-connect-behavior.js';
+import '../ft-scrolling-behavior.js';
 import { Polymer } from '@polymer/polymer/lib/legacy/polymer-fn.js';
 import { html } from '@polymer/polymer/lib/utils/html-tag.js';
 
@@ -27,11 +27,10 @@ Polymer
             :host {
                 display: block;
                 overflow: hidden;
-           }
+            }
         </style>
 
-        <ft-connect-behavior fake-data="true">
-        </ft-connect-behavior>
+        <ft-scrolling-behavior></ft-scrolling-behavior>
 `,
 
   is: 'demo-fixture',
