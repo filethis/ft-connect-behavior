@@ -1,34 +1,33 @@
 <!doctype html>
 <html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
 
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+        <title>ft-connect-behavior Demo</title>
 
-    <title>ft-connect-behavior Demo</title>
+        <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
 
-    <script type="module">
-        import '@polymer/iron-demo-helpers/demo-pages-shared-styles';
-        import '@polymer/iron-demo-helpers/demo-snippet';
-    </script>
+        <link rel="import" href="../../polymer/polymer.html">
+        <link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
+        <link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
+        <link rel="import" href="demo-fixture.html">
 
-    <script type="module" src="demo-fixture.js"></script>
-
-    <custom-style>
         <style is="custom-style" include="demo-pages-shared-styles">
+            body {
+                background-color: #FAFAFA;
+            }
+            html, body {
+                height: 100%;
+                margin:0;
+            }
         </style>
-    </custom-style>
-</head>
+    </head>
 
-<body>
-    <div class="vertical-section-container centered">
-        <h3>Basic ft-connect-behavior demo</h3>
-        <demo-snippet>
-            <template>
-                <demo-fixture></demo-fixture>
-            </template>
-        </demo-snippet>
-    </div>
-</body>
+    <body>
+        <demo-fixture
+                style="height:100%; ">
+        </demo-fixture>
+    </body>
 
 </html>
