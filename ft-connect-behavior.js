@@ -21,7 +21,7 @@ limitations under the License.
 import 'ft-error-behavior/ft-error-behavior.js';
 import 'ft-http-behavior/ft-http-behavior.js';
 import 'ft-confirmation-dialog/ft-confirmation-dialog.js';
-import 'log4javascript/log4javascript.js';
+// import 'log4javascript/log4javascript.js';
 import '@polymer/polymer/polymer-legacy.js';
 
 const $_documentContainer = document.createElement('template');
@@ -201,7 +201,7 @@ FileThis.ConnectBehavior = {
     fakeDataPath:
     {
       type: String,
-      value: "../bower_components/ft-connect-behavior/demo/data/",
+      value: "../node_modules/ft-connect-behavior/demo/data/",
       notify: true
     },
 
@@ -292,7 +292,7 @@ FileThis.ConnectBehavior = {
   ready: function () {
     // TODO: We would prefer not to load the library at all.
     // If the log4javascript code were wrapped in a polymer element, we could use _template_ with _dom-if_.
-    log4javascript.setEnabled(this.debug);
+    // log4javascript.setEnabled(this.debug);
 
     this.logInfo("Ready");
 
@@ -1648,34 +1648,34 @@ FileThis.ConnectBehavior = {
   },
 
   logInfo: function (message) {
-    var logger = this._getLogger();
-    if (!logger)
-      return;
-    logger.info(message);
+    // var logger = this._getLogger();
+    // if (!logger)
+    //   return;
+    // logger.info(message);
   },
 
   logWarn: function (message) {
-    var logger = this._getLogger();
-    if (!logger)
-      return;
-    logger.warn(message);
+    // var logger = this._getLogger();
+    // if (!logger)
+    //   return;
+    // logger.warn(message);
   },
 
   logError: function (message) {
-    var logger = this._getLogger();
-    if (!logger)
-      return;
-    logger.error(message);
+    // var logger = this._getLogger();
+    // if (!logger)
+    //   return;
+    // logger.error(message);
   },
 
   _getLogger: function () {
-    var logger = log4javascript.getDefaultLogger();
-    if (!logger)
-      return null;
-    if (!logger.hasOwnProperty("log"))
-      return null;
-    if (typeof logger !== "function")
-      return null;
-    return logger;
+    // var logger = log4javascript.getDefaultLogger();
+    // if (!logger)
+    //   return null;
+    // if (!logger.hasOwnProperty("log"))
+    //   return null;
+    // if (typeof logger !== "function")
+    //   return null;
+    // return logger;
   }
 }
