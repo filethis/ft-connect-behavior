@@ -9,13 +9,32 @@
     "type-detect": "1.0.0"
   },
   "main": "ft-connect-behavior.js",
+  "files": [
+    "*.html",
+    "*.js",
+    "*.make",
+    "*.png",
+    "*.svg",
+    ".yalc/",
+    "data/",
+    "demo/",
+    "test/",
+    ".babelrc",
+    ".eslintrc.json",
+    ".gitignore",
+    "LICENSE",
+    "Makefile",
+    "manifest.json",
+    "polymer.json"
+  ],
   "dependencies": {
-    "@polymer/polymer": "^3.0.0",
     "@polymer/paper-button": "^3.0.0",
-    "log4javascript": "^1.4.9",
+    "@polymer/polymer": "^3.0.0",
     "ft-confirmation-dialog": "file:.yalc/ft-confirmation-dialog",
     "ft-error-behavior": "file:.yalc/ft-error-behavior",
-    "ft-http-behavior": "file:.yalc/ft-http-behavior"
+    "ft-http-behavior": "file:.yalc/ft-http-behavior",
+    "ft-scrolling-behavior": "file:.yalc/ft-scrolling-behavior",
+    "log4javascript": "^1.4.9"
   },
   "devDependencies": {
     "@polymer/iron-component-page": "^4.0.0",
