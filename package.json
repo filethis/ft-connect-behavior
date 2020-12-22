@@ -1,6 +1,6 @@
 {
   "description": "An element that handles most of the business logic needed by FileThis Connect element variations.",
-  "name": "ft-connect-behavior",
+  "name": "@filethis/ft-connect-behavior",
   "version": "1.0.21",
   "resolutions": {
     "inherits": "2.0.3",
@@ -15,7 +15,6 @@
     "*.make",
     "*.png",
     "*.svg",
-    ".yalc/",
     "data/",
     "demo/",
     "test/",
@@ -30,10 +29,10 @@
   "dependencies": {
     "@polymer/paper-button": "^3.0.0",
     "@polymer/polymer": "^3.0.0",
-    "ft-confirmation-dialog": "file:.yalc/ft-confirmation-dialog",
-    "ft-error-behavior": "file:.yalc/ft-error-behavior",
-    "ft-http-behavior": "file:.yalc/ft-http-behavior",
-    "ft-scrolling-behavior": "file:.yalc/ft-scrolling-behavior",
+    "@filethis/ft-confirmation-dialog": "^1.0.24",
+    "@filethis/ft-error-behavior": "^1.0.22",
+    "@filethis/ft-http-behavior": "^1.0.22",
+    "@filethis/ft-scrolling-behavior": "^1.0.19",
     "log4javascript": "^1.4.9"
   },
   "devDependencies": {

@@ -18,9 +18,9 @@ limitations under the License.
   from HTML and may be out of place here. Review them and
   then delete this comment!
 */
-import 'ft-error-behavior/ft-error-behavior.js';
-import 'ft-http-behavior/ft-http-behavior.js';
-import 'ft-confirmation-dialog/ft-confirmation-dialog.js';
+import '@filethis/ft-error-behavior/ft-error-behavior.js';
+import '@filethis/ft-http-behavior/ft-http-behavior.js';
+import '@filethis/ft-confirmation-dialog/ft-confirmation-dialog.js';
 // import 'log4javascript/log4javascript.js';
 import '@polymer/polymer/polymer-legacy.js';
 
